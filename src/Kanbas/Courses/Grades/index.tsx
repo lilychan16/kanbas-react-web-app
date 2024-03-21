@@ -1,13 +1,13 @@
 import "./index.css";
 import { FaFilter, FaGear } from "react-icons/fa6";
-import { assignments, enrollments, grades, users } from "../../Database";
+import db from "../../Database";
 import { useParams } from "react-router-dom";
 import { FaFileExport, FaFileImport } from "react-icons/fa";
 
 function Grades() {
   const { courseId } = useParams();
-  const as = assignments.filter((assignment) => assignment.course === courseId);
-  const es = enrollments.filter((enrollment) => enrollment.course === courseId);
+  const as = db.assignments.filter((assignment) => assignment.course === courseId);
+  const es = db.enrollments.filter((enrollment) => enrollment.course === courseId);
   //console.log("as", as);
   //console.log("es", es);
 
@@ -70,14 +70,14 @@ function Grades() {
             </thead>
             <tbody>
               {es.map((enrollment) => {
-                const user = users.find((user) => user._id === enrollment.user);
+                const user = db.users.find((user) => user._id === enrollment.user);
                 return (
                   <tr>
                     <td className="text-danger">
                       {user?.firstName} {user?.lastName}
                     </td>
                     {as.map((assignment) => {
-                      const grade = grades.find(
+                      const grade = db.grades.find(
                         (grade) =>
                           grade.student === enrollment.user &&
                           grade.assignment === assignment._id

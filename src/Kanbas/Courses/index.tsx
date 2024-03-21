@@ -1,6 +1,6 @@
 import "./index.css";
 import "../../Kanbas/style.css";
-import { courses } from "../../Kanbas/Database";
+import db from "../../Kanbas/Database";
 import { Navigate, Route, Routes, useParams, useLocation } from "react-router-dom";
 import { HiMiniBars3 } from "react-icons/hi2";
 import { FaEye } from "react-icons/fa";
@@ -11,7 +11,18 @@ import Assignments from "./Assignments";
 import AssignmentEditor from "./Assignments/Editor";
 import Grades from "./Grades";
 
-function Courses() {
+function Courses({
+  courses,
+}: {
+  courses: {
+    _id: string;
+    name: string;
+    number: string;
+    startDate: string;
+    endDate: string;
+    image: string;
+  }[];
+}) {
   const { courseId } = useParams();
   const { pathname } = useLocation();
   const course = courses.find((course) => course._id === courseId);
@@ -58,7 +69,10 @@ function Courses() {
             <Route path="Modules" element={<Modules />} />
             <Route path="Piazza" element={<h1>Piazza</h1>} />
             <Route path="Assignments" element={<Assignments />} />
-            <Route path="Assignments/:assignmentId" element={<AssignmentEditor />} />
+            <Route
+              path="Assignments/:assignmentId"
+              element={<AssignmentEditor />}
+            />
             <Route path="Grades" element={<Grades />} />
           </Routes>
         </div>
