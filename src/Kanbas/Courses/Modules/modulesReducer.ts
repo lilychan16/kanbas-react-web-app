@@ -2,8 +2,19 @@ import { createSlice } from "@reduxjs/toolkit";
 import db from "../../Database";
 
 const initialState = {
-    modules: db.modules,
-    module: { name: "New Module 123", description: "New Description" },
+  modules: db.modules,
+  module: {
+    name: "New Module 123",
+    description: "New Description",
+    lessons: [
+      {
+        _id: "0",
+        name: "New Lesson",
+        description: "New Lesson Description",
+        module: "0",
+      },
+    ],
+  },
 };
 
 const modulesSlice = createSlice({
