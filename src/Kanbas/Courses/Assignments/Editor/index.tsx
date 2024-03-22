@@ -2,18 +2,47 @@ import "./index.css";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import db from "../../../Database";
 import { FaCheckCircle, FaEllipsisV } from "react-icons/fa";
+import { 
+  addAssignment, 
+  deleteAssignment, 
+  updateAssignment, 
+  setAssignment 
+} from "../assignmentsReducer";
+import { useSelector, useDispatch } from "react-redux";
+import { KanbasState } from "../../../store";
 
 function AssignmentEditor() {
     const { assignmentId } = useParams();
-    const assignment = db.assignments.find(
-        (assignment) => assignment._id === assignmentId
+    const assignmentList = useSelector(
+      (state: KanbasState) => state.assignmentsReducer.assignments
+    );
+    const assignment = useSelector(
+      (state: KanbasState) => state.assignmentsReducer.assignment
     );
     const { courseId } = useParams();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const handleSave = () => {
-        console.log("Actually saving assignment TBD in later assignments");
+      if (assignmentId === "New") {
+        dispatch(addAssignment({ ...assignment, course: courseId }));
+      } else {
+        dispatch(updateAssignment({ ...assignment, _id: assignmentId, course: courseId }));
+      }
         navigate(`/Kanbas/Courses/${courseId}/Assignments`);
+        console.log("New assignment created");
     };
+    const handleCancel = () => {
+        dispatch(setAssignment({
+          ...assignment,
+          title: "New Assignment",
+          start: "2024-01-01",
+          due: "2024-01-31",
+          points: "100",
+        }));
+        navigate(`/Kanbas/Courses/${courseId}/Assignments`);
+        console.log("New assignment canceled");
+    };
+
     return (
       <div className="ms-3 me-2" style={{ width: "90%" }}>
         <div className="row">
@@ -37,13 +66,25 @@ function AssignmentEditor() {
               className="form-control"
               id="assignment-name"
               value={assignment?.title}
+              onChange={(e) =>
+                dispatch(
+                  setAssignment({ ...assignment, title: e.target.value })
+                )
+              }
             />
           </div>
         </div>
 
         <div className="mb-3 row">
           <div>
-            <textarea className="form-control">
+            <textarea
+              className="form-control"
+              onChange={(e) =>
+                dispatch(
+                  setAssignment({ ...assignment, description: e.target.value })
+                )
+              }
+            >
               This is the assignment description.
             </textarea>
           </div>
@@ -58,7 +99,12 @@ function AssignmentEditor() {
               type="text"
               className="form-control"
               id="points"
-              value="100"
+              value={assignment?.points}
+              onChange={(e) =>
+                dispatch(
+                  setAssignment({ ...assignment, points: e.target.value })
+                )
+              }
             />
           </div>
         </div>
@@ -145,6 +191,11 @@ function AssignmentEditor() {
                 id="assign"
                 className="form-control"
                 value={assignment?.due}
+                onChange={(e) =>
+                  dispatch(
+                    setAssignment({ ...assignment, due: e.target.value })
+                  )
+                }
               />
             </div>
 
@@ -156,6 +207,11 @@ function AssignmentEditor() {
                   id="assign"
                   className="form-control"
                   value={assignment?.start}
+                  onChange={(e) =>
+                    dispatch(
+                      setAssignment({ ...assignment, start: e.target.value })
+                    )
+                  }
                 />
               </div>
 
@@ -166,6 +222,11 @@ function AssignmentEditor() {
                   id="assign"
                   className="form-control"
                   value={assignment?.due}
+                  onChange={(e) =>
+                    dispatch(
+                      setAssignment({ ...assignment, title: e.target.value })
+                    )
+                  }
                 />
               </div>
             </div>
@@ -196,10 +257,12 @@ function AssignmentEditor() {
             <button onClick={handleSave} className="btn btn-danger float-end">
               Save
             </button>
-            <Link to={`/Kanbas/Courses/${courseId}/Assignments`} 
-                className="btn btn-secondary button-color float-end me-1">
+            <button
+              onClick={handleCancel}
+              className="btn btn-secondary button-color float-end me-1"
+            >
               Cancel
-            </Link>
+            </button>
           </div>
         </div>
         <hr />

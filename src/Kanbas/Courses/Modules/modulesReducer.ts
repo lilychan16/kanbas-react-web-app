@@ -26,6 +26,18 @@ const modulesSlice = createSlice({
                 { ...action.payload, _id: new Date().getTime().toString() },
                 ...state.modules,
             ];
+            state.module = {
+              name: "New Module 123",
+              description: "New Description",
+              lessons: [
+                {
+                  _id: "0",
+                  name: "New Lesson",
+                  description: "New Lesson Description",
+                  module: "0",
+                },
+              ],
+            };
         },
         deleteModule: (state, action) => {
             state.modules = state.modules.filter(
@@ -40,6 +52,18 @@ const modulesSlice = createSlice({
                     return module;
                 }
             });
+            state.module = {
+              name: "New Module 123",
+              description: "New Description",
+              lessons: [
+                {
+                  _id: "0",
+                  name: "New Lesson",
+                  description: "New Lesson Description",
+                  module: "0",
+                },
+              ],
+            };
         },
         setModule: (state, action) => {
             state.module = action.payload;
